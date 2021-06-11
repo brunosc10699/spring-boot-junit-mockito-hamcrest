@@ -76,4 +76,20 @@ public class StudentServiceTest {
         List<StudentDTO> list = studentService.findAll();
         assertThat(list.size(), is(equalTo(0)));
     }
+
+    @Test
+    void whenDeleteByIdMethodIsCalledWithARegisteredIdThenTheStudentMustBeExcluded() {
+    }
+
+    @Test
+    void whenDeleteByIdMethodIsCalledWithAnUnegisteredIdThenThrowAnException() {
+    }
+
+    @Test
+    void whenDeleteByEmailMethodIsCalledWithARegisteredEmailThenTheStudentMustBeExcluded() {
+    }
+
+    @Test
+    void whenDeleteByEmailMethodIsCalledWithAnUnregisteredEmailThenThrowAnException() {
+    }
 }
