@@ -22,13 +22,15 @@ public class StudentDTO implements Serializable {
     private Long id;
 
     @NotBlank(message = "Student name is mandatory!")
+    @Size(max = 50, message = "Student name may have 50 characters maximum!")
     private String name;
 
     @NotBlank(message = "We need to know your birth date, please!")
+    @Size(max = 10, message = "Your birth date must have this format: xx/xx/xxxx")
     @Past
     private Date birthDate;
 
-    @Email
+    @Email(message = "Inform us your best email!")
     private String email;
 
     @NotBlank(message = "Your phone number is required!")

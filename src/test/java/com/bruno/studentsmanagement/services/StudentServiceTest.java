@@ -3,6 +3,7 @@ package com.bruno.studentsmanagement.services;
 import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -10,13 +11,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-    private Student givenStudent = new Student(1L, "Pedro Álvares Cabral", sdf.parse("01-011467"), "pedroac@gmail.com", "(11) 98741-3652", 0);
+    private Student givenStudent = new Student(
+            1L, "Pedro Álvares Cabral",
+            sdf.parse("01-01-1467"),
+            "pedroac@gmail.com",
+            "(11) 98741-3652",
+            0
+    );
     private StudentDTO expectedStudent = new StudentDTO(givenStudent);
 
     @Mock
@@ -26,5 +39,23 @@ public class StudentServiceTest {
     private StudentService studentService;
 
     public StudentServiceTest() throws ParseException {
+    }
+
+    @Test
+    void whenANewStudentIsGivenThenItMustBeCreated() {
+        when(studentRepository.save(givenStudent)).thenReturn(givenStudent);
+        StudentDTO studentDTO = studentService.save(expectedStudent);
+        assertThat(studentDTO.getId(), is(equalTo(expectedStudent.getId())));
+        assertThat(studentDTO.getName(), is(equalTo(expectedStudent.getName())));
+        assertThat(studentDTO.getBirthDate(), is(equalTo(expectedStudent.getBirthDate())));
+        assertThat(studentDTO.getEmail(), is(equalTo(expectedStudent.getEmail())));
+        assertThat(studentDTO.getPhone(), is(equalTo(expectedStudent.getPhone())));
+        assertThat(studentDTO.getAttendance(), is(equalTo(0)));
+    }
+
+    @Test
+    void whenCreatingANewStudentAnEmailAccountIsAlreadyRegisteredThenThrowAnException() {
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
+        assertThrows(EmailAlreadyRegisterdException.class, () -> studentService.save(expectedStudent));
     }
 }
