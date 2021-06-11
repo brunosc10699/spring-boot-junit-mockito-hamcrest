@@ -78,10 +78,26 @@ public class StudentServiceTest {
     }
 
     @Test
+    void whenFindByIdIsCalledWithARegisteredIdThenReturnTheStudent() {
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
+        StudentDTO studentDTO = studentService.findById(givenStudent.getId());
+        assertThat(studentDTO.getId(), is(equalTo(expectedStudent.getId())));
+        assertThat(studentDTO.getName(), is(equalTo(expectedStudent.getName())));
+        assertThat(studentDTO.getBirthDate(), is(equalTo(expectedStudent.getBirthDate())));
+        assertThat(studentDTO.getEmail(), is(equalTo(expectedStudent.getEmail())));
+        assertThat(studentDTO.getPhone(), is(equalTo(expectedStudent.getPhone())));
+        assertThat(studentDTO.getAttendance(), is(equalTo(expectedStudent.getAttendance())));
+    }
+
+    @Test
+    void whenFindByIdIsCalledWithAnUnregisteredIdThenThrowAnException() {
+    }
+
+    @Test
     void whenDeleteByIdMethodIsCalledWithARegisteredIdThenTheStudentMustBeExcluded() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
         doNothing().when(studentRepository).deleteById(givenStudent.getId());
-        studentService.deleteByID(givenStudent.getId());
+        studentService.deleteById(givenStudent.getId());
         verify(studentRepository, times(1)).findById(givenStudent.getId());
         verify(studentRepository, times(1)).deleteById(givenStudent.getId());
     }
