@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "tb_student")
@@ -24,7 +25,7 @@ public class Student implements Serializable {
     private String name;
 
     @Column(nullable = false)
-    private String birthDate;
+    private Date birthDate;
 
     @Column(nullable = false)
     private String email;
