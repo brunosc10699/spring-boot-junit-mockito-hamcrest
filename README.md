@@ -1,1 +1,1 @@
-# A simple REST API to manage students under construction
+# A simple REST API to manage students. Under construction!
