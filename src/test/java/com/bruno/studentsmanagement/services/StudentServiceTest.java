@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
@@ -79,6 +79,11 @@ public class StudentServiceTest {
 
     @Test
     void whenDeleteByIdMethodIsCalledWithARegisteredIdThenTheStudentMustBeExcluded() {
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
+        doNothing().when(studentRepository).deleteById(givenStudent.getId());
+        studentService.deleteByID(givenStudent.getId());
+        verify(studentRepository, times(1)).findById(givenStudent.getId());
+        verify(studentRepository, times(1)).deleteById(givenStudent.getId());
     }
 
     @Test
