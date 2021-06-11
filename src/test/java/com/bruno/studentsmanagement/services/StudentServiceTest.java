@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -59,5 +61,19 @@ public class StudentServiceTest {
     void whenCreatingANewStudentAnEmailAccountIsAlreadyRegisteredThenThrowAnException() {
         when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.of(givenStudent));
         assertThrows(EmailAlreadyRegisteredException.class, () -> studentService.save(expectedStudent));
+    }
+
+    @Test
+    void whenFindAllMethodIsCalledThenReturnAListOfStudents() {
+        when(studentRepository.findAll()).thenReturn(Collections.singletonList(givenStudent));
+        List<StudentDTO> list = studentService.findAll();
+        assertThat(list.get(0), is(equalTo(expectedStudent)));
+    }
+
+    @Test
+    void whenFindAllMethodIsCalledThenReturnAnEmptyListOfStudents(){
+        when(studentRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+        List<StudentDTO> list = studentService.findAll();
+        assertThat(list.size(), is(equalTo(0)));
     }
 }
