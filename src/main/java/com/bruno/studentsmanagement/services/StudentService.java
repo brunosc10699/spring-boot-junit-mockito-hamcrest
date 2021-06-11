@@ -4,6 +4,7 @@ import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
+import com.bruno.studentsmanagement.services.exceptions.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,11 @@ public class StudentService {
 
     public List<StudentDTO> findAll(){
         return studentRepository.findAll().stream().map(StudentDTO::new).collect(Collectors.toList());
+    }
+
+    public StudentDTO findById(Long id){
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        return new StudentDTO(student);
     }
 
     private Student fromDTO(StudentDTO studentDTO){
