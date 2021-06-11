@@ -3,6 +3,7 @@ package com.bruno.studentsmanagement.services;
 import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
+import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,7 +57,7 @@ public class StudentServiceTest {
 
     @Test
     void whenCreatingANewStudentAnEmailAccountIsAlreadyRegisteredThenThrowAnException() {
-        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
-        assertThrows(EmailAlreadyRegisterdException.class, () -> studentService.save(expectedStudent));
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.of(givenStudent));
+        assertThrows(EmailAlreadyRegisteredException.class, () -> studentService.save(expectedStudent));
     }
 }
