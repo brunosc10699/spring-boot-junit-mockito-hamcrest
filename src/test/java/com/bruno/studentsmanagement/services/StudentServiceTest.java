@@ -181,4 +181,37 @@ public class StudentServiceTest {
         when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
         assertThrows(StudentNotFoundException.class, () -> studentService.updateByEmail(expectedStudent));
     }
+
+    @Test
+    void whenUpdateEmailMethodIsCalledWithRegisteredIdAndEmailThenUpdateStudentEmail() {
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.of(givenStudent));
+        StudentDTO updatedStudent = studentService.updateEmail(givenStudent.getId(), givenStudent.getEmail(), expectedStudent.getEmail());
+        assertThat(updatedStudent.getId(), is(equalTo(expectedStudent.getId())));
+        assertThat(updatedStudent.getEmail(), is(equalTo(expectedStudent.getEmail())));
+    }
+
+    @Test
+    void whenUpdateEmailMethodIsCalledWithUnregisteredIdThenThrowException() {
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
+        assertThrows(InconsistencyStudentException.class,
+                () -> studentService.updateEmail(
+                        givenStudent.getId(),
+                        givenStudent.getEmail(),
+                        expectedStudent.getEmail()
+                )
+        );
+    }
+
+    @Test
+    void whenUpdateEmailMethodIsCalledWithUnregisteredEmailThenThrowException() {
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
+        assertThrows(InconsistencyStudentException.class,
+                () -> studentService.updateEmail(
+                        givenStudent.getId(),
+                        givenStudent.getEmail(),
+                        expectedStudent.getEmail()
+                )
+        );
+    }
 }
