@@ -184,6 +184,7 @@ public class StudentServiceTest {
     @Test
     void whenUpdateEmailMethodIsCalledWithRegisteredIdThenUpdateStudentEmail() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
+        when(studentRepository.save(givenStudent)).thenReturn(givenStudent);
         StudentDTO updatedStudent = studentService.updateEmail(
                 givenStudent.getId(),
                 givenStudent.getEmail(),
