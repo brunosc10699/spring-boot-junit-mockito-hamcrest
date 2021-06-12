@@ -73,7 +73,7 @@ public class StudentServiceTest {
 
     @Test
     void whenFindAllMethodIsCalledThenReturnAnEmptyListOfStudents(){
-        when(studentRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+        when(studentRepository.findAll()).thenReturn(Collections.emptyList());
         List<StudentDTO> list = studentService.findAll();
         assertThat(list.size(), is(equalTo(0)));
     }
@@ -94,6 +94,24 @@ public class StudentServiceTest {
     void whenFindByIdIsCalledWithAnUnregisteredIdThenThrowAnException() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
         assertThrows(StudentNotFoundException.class, () -> studentService.findById(givenStudent.getId()));
+    }
+
+    @Test
+    void whenFindByEmailIsCalledWithARegisteredEmailThenReturnTheStudent() {
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.of(givenStudent));
+        StudentDTO studentDTO = studentService.findByEmail(givenStudent.getEmail());
+        assertThat(studentDTO.getId(), is(equalTo(expectedStudent.getId())));
+        assertThat(studentDTO.getName(), is(equalTo(expectedStudent.getName())));
+        assertThat(studentDTO.getBirthDate(), is(equalTo(expectedStudent.getBirthDate())));
+        assertThat(studentDTO.getEmail(), is(equalTo(expectedStudent.getEmail())));
+        assertThat(studentDTO.getPhone(), is(equalTo(expectedStudent.getPhone())));
+        assertThat(studentDTO.getAttendance(), is(equalTo(expectedStudent.getAttendance())));
+    }
+
+    @Test
+    void whenFindByEmailIsCalledWithAnUnregisteredEmailThenThrowAnException() {
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
+        assertThrows(StudentNotFoundException.class, () -> studentService.findByEmail(givenStudent.getEmail()));
     }
 
     @Test

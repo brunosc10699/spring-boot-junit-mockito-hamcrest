@@ -34,6 +34,8 @@ public class StudentService {
         return new StudentDTO(student);
     }
 
+    public void deleteById(Long id)
+
     private Student fromDTO(StudentDTO studentDTO){
         return new Student(
                 studentDTO.getId(),
