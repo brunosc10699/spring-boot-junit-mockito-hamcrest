@@ -49,8 +49,11 @@ public class StudentService {
         studentRepository.deleteByEmail(email);
     }
 
-    public StudentDTO updateById(Long id){
-        return null;
+    public StudentDTO updateById(StudentDTO studentDTO){
+        StudentDTO savedStudentDTO = findById(studentDTO.getId());
+        studentDTO.setEmail(savedStudentDTO.getEmail());
+        Student student = fromDTO(studentDTO);
+        return new StudentDTO(studentRepository.save(student));
     }
 
     private void getStudentEmail(String email){
