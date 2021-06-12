@@ -33,6 +33,6 @@ public class Student implements Serializable {
     @Column(nullable = false, length = 15)
     private String phone;
 
-    private Integer attendance = 0;
+    private Integer attendance;
 
 }

@@ -79,6 +79,17 @@ public class StudentService {
         return new StudentDTO(studentRepository.save(student));
     }
 
+    public StudentDTO updateEmail(Long id, String email, String newEmail){
+        StudentDTO studentDTO = findById(id);
+        if(!studentDTO.getEmail().equals(email)){
+            throw new InconsistencyStudentException(email, id);
+        }
+        studentDTO.setEmail(newEmail);
+        Student student = fromDTO(studentDTO);
+        student = studentRepository.save(student);
+        return new StudentDTO(student);
+    }
+
     private Optional<Void> getStudentEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if(student.isPresent()){

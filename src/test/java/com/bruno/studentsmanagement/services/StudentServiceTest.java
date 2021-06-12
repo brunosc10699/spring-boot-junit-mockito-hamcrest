@@ -4,7 +4,6 @@ import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
-import com.bruno.studentsmanagement.services.exceptions.InconsistencyStudentException;
 import com.bruno.studentsmanagement.services.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -183,10 +182,13 @@ public class StudentServiceTest {
     }
 
     @Test
-    void whenUpdateEmailMethodIsCalledWithRegisteredIdAndEmailThenUpdateStudentEmail() {
+    void whenUpdateEmailMethodIsCalledWithRegisteredIdThenUpdateStudentEmail() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
-        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.of(givenStudent));
-        StudentDTO updatedStudent = studentService.updateEmail(givenStudent.getId(), givenStudent.getEmail(), expectedStudent.getEmail());
+        StudentDTO updatedStudent = studentService.updateEmail(
+                givenStudent.getId(),
+                givenStudent.getEmail(),
+                expectedStudent.getEmail()
+        );
         assertThat(updatedStudent.getId(), is(equalTo(expectedStudent.getId())));
         assertThat(updatedStudent.getEmail(), is(equalTo(expectedStudent.getEmail())));
     }
@@ -194,19 +196,7 @@ public class StudentServiceTest {
     @Test
     void whenUpdateEmailMethodIsCalledWithUnregisteredIdThenThrowException() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
-        assertThrows(InconsistencyStudentException.class,
-                () -> studentService.updateEmail(
-                        givenStudent.getId(),
-                        givenStudent.getEmail(),
-                        expectedStudent.getEmail()
-                )
-        );
-    }
-
-    @Test
-    void whenUpdateEmailMethodIsCalledWithUnregisteredEmailThenThrowException() {
-        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
-        assertThrows(InconsistencyStudentException.class,
+        assertThrows(StudentNotFoundException.class,
                 () -> studentService.updateEmail(
                         givenStudent.getId(),
                         givenStudent.getEmail(),
