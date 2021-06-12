@@ -49,6 +49,10 @@ public class StudentService {
         studentRepository.deleteByEmail(email);
     }
 
+    public StudentDTO updateById(Long id){
+        return null;
+    }
+
     private void getStudentEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if(student.isPresent()){
