@@ -40,6 +40,8 @@ public class StudentService {
     }
 
     public void deleteById(Long id){
+        findById(id);
+        studentRepository.deleteById(id);
     }
 
     private void getStudentEmail(String email){

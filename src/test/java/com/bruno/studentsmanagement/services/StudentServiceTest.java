@@ -126,8 +126,7 @@ public class StudentServiceTest {
     @Test
     void whenDeleteByIdMethodIsCalledWithAnUnregisteredIdThenThrowAnException() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
-        doNothing().when(studentRepository).deleteById(givenStudent.getId());
-        assertThrows(StudentNotFoundException.class, () -> studentService.deleteById(expectedStudent.getId()));
+        assertThrows(StudentNotFoundException.class, () -> studentService.deleteById(givenStudent.getId()));
     }
 
     @Test
