@@ -116,15 +116,18 @@ public class StudentServiceTest {
 
     @Test
     void whenDeleteByIdMethodIsCalledWithARegisteredIdThenTheStudentMustBeExcluded() {
-//        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
-//        doNothing().when(studentRepository).deleteById(givenStudent.getId());
-//        studentService.deleteById(givenStudent.getId());
-//        verify(studentRepository, times(1)).findById(givenStudent.getId());
-//        verify(studentRepository, times(1)).deleteById(givenStudent.getId());
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
+        doNothing().when(studentRepository).deleteById(givenStudent.getId());
+        studentService.deleteById(givenStudent.getId());
+        verify(studentRepository, times(1)).findById(givenStudent.getId());
+        verify(studentRepository, times(1)).deleteById(givenStudent.getId());
     }
 
     @Test
-    void whenDeleteByIdMethodIsCalledWithAnUnegisteredIdThenThrowAnException() {
+    void whenDeleteByIdMethodIsCalledWithAnUnregisteredIdThenThrowAnException() {
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
+        doNothing().when(studentRepository).deleteById(givenStudent.getId());
+        assertThrows(StudentNotFoundException.class, () -> studentService.deleteById(expectedStudent.getId()));
     }
 
     @Test

@@ -39,6 +39,9 @@ public class StudentService {
         return new StudentDTO(student);
     }
 
+    public void deleteById(Long id){
+    }
+
     private void getStudentEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if(student.isPresent()){
