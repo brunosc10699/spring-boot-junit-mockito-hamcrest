@@ -52,11 +52,10 @@ public class StudentService {
 
     public StudentDTO updateById(Long id, StudentDTO studentDTO){
         StudentDTO savedStudent = findById(id);
-        if(!savedStudent.getEmail().equals(studentDTO.getEmail())){
-            throw new InconsistencyStudentException(studentDTO.getEmail(), id);
+        if(!studentDTO.getEmail().equals(savedStudent.getEmail())){
+             getStudentEmail(studentDTO.getEmail());
         }
         studentDTO.setId(id);
-        studentDTO.setEmail(savedStudent.getEmail());
         if(studentDTO.getAttendance() == null){
             studentDTO.setAttendance(savedStudent.getAttendance());
         }
@@ -70,6 +69,9 @@ public class StudentService {
             throw new InconsistencyStudentException(studentDTO.getEmail(), studentDTO.getId());
         }
         studentDTO.setId(savedStudent.getId());
+        if(!studentDTO.getEmail().equals(savedStudent.getEmail())){
+            getStudentEmail(studentDTO.getEmail());
+        }
         if(studentDTO.getAttendance() == null){
             studentDTO.setAttendance(savedStudent.getAttendance());
         }
@@ -77,11 +79,12 @@ public class StudentService {
         return new StudentDTO(studentRepository.save(student));
     }
 
-    private void getStudentEmail(String email){
+    private Optional<Void> getStudentEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if(student.isPresent()){
             throw new EmailAlreadyRegisteredException(email);
         }
+        return null;
     }
 
     private Student fromDTO(StudentDTO studentDTO){
