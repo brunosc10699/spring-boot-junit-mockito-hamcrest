@@ -45,7 +45,8 @@ public class StudentService {
     }
 
     public void deleteByEmail(String email){
-
+        findByEmail(email);
+        studentRepository.deleteByEmail(email);
     }
 
     private void getStudentEmail(String email){
