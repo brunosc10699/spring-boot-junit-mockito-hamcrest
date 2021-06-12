@@ -131,9 +131,16 @@ public class StudentServiceTest {
 
     @Test
     void whenDeleteByEmailMethodIsCalledWithARegisteredEmailThenTheStudentMustBeExcluded() {
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.of(givenStudent));
+        doNothing().when(studentRepository).deleteByEmail(givenStudent.getEmail());
+        studentService.deleteByEmail(givenStudent.getEmail());
+        verify(studentRepository, times(1)).findByEmail(givenStudent.getEmail());
+        verify(studentRepository, times(1)).deleteByEmail(givenStudent.getEmail());
     }
 
     @Test
     void whenDeleteByEmailMethodIsCalledWithAnUnregisteredEmailThenThrowAnException() {
+        when(studentRepository.findByEmail(givenStudent.getEmail())).thenReturn(Optional.empty());
+        assertThrows(StudentNotFoundException.class, () -> studentService.deleteByEmail(givenStudent.getEmail()));
     }
 }
