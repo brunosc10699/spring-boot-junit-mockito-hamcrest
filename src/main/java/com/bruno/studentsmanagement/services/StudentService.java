@@ -34,7 +34,13 @@ public class StudentService {
         return new StudentDTO(student);
     }
 
-    public void deleteById(Long id)
+    public StudentDTO findByEmail(String email){
+        Optional<Student> student = studentRepository.findByEmail(email);
+        if(student.isEmpty()){
+            throw new StudentNotFoundException(email);
+        }
+        return new StudentDTO(student);
+    }
 
     private Student fromDTO(StudentDTO studentDTO){
         return new Student(
@@ -45,13 +51,6 @@ public class StudentService {
                 studentDTO.getPhone(),
                 studentDTO.getAttendance()
         );
-    }
-
-    private void findByEmail(String email){
-        Optional<Student> student = studentRepository.findByEmail(email);
-        if(student.isPresent()){
-            throw new EmailAlreadyRegisteredException(email);
-        }
     }
 
 }

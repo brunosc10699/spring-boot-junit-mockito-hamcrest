@@ -11,4 +11,8 @@ public class StudentNotFoundException extends RuntimeException{
     public StudentNotFoundException(Long id){
         super(String.format("There is no student registered with this ID: %s", id));
     }
+
+    public StudentNotFoundException(String email){
+        super(String.format("There is no student registered with this email address: %s", email));
+    }
 }

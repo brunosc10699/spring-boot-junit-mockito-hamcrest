@@ -11,6 +11,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
@@ -46,5 +47,14 @@ public class StudentDTO implements Serializable {
         email = student.getEmail();
         phone = student.getPhone();
         attendance = student.getAttendance();
+    }
+
+    public StudentDTO (Optional<Student> student){
+        id = student.orElseThrow().getId();
+        name = student.orElseThrow().getName();
+        birthDate = student.orElseThrow().getBirthDate();
+        email = student.orElseThrow().getEmail();
+        phone = student.orElseThrow().getPhone();
+        attendance = student.orElseThrow().getAttendance();
     }
 }
