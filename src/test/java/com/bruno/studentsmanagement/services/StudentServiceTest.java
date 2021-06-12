@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -208,7 +207,8 @@ public class StudentServiceTest {
 
     @Test
     void whenIncreaseAttendanceMethodIsCalledWithARegisteredIdThenIncreaseStudentAttendance() {
-        when(studentRepository.getById(givenStudent.getId())).thenReturn(givenStudent);
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
+        when(studentRepository.save(givenStudent)).thenReturn(givenStudent);
         StudentDTO updatedStudent = studentService.increaseAttendance(givenStudent.getId());
         assertThat(updatedStudent.getId(), is(equalTo(expectedStudent.getId())));
         assertThat(updatedStudent.getAttendance(), is(equalTo(expectedStudent.getAttendance() + 1)));
@@ -216,7 +216,7 @@ public class StudentServiceTest {
 
     @Test
     void whenIncreaseAttendanceMethodIsCalledWithAnUnregisteredIdThenThrowException() {
-        when(studentRepository.getById(givenStudent.getId())).thenReturn(null);
-        assertThrows(EntityNotFoundException.class, () -> studentService.increaseAttendance(givenStudent.getId()));
+        when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
+        assertThrows(StudentNotFoundException.class, () -> studentService.increaseAttendance(givenStudent.getId()));
     }
 }
