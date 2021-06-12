@@ -4,6 +4,7 @@ import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
+import com.bruno.studentsmanagement.services.exceptions.InconsistencyStudentException;
 import com.bruno.studentsmanagement.services.exceptions.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,9 +50,13 @@ public class StudentService {
         studentRepository.deleteByEmail(email);
     }
 
-    public StudentDTO updateById(StudentDTO studentDTO){
-        StudentDTO savedStudentDTO = findById(studentDTO.getId());
-        studentDTO.setEmail(savedStudentDTO.getEmail());
+    public StudentDTO updateById(Long id, StudentDTO studentDTO){
+        StudentDTO savedStudent = findById(id);
+        if(!savedStudent.getEmail().equals(studentDTO.getEmail())){
+            throw new InconsistencyStudentException(studentDTO.getEmail(), id);
+        }
+        studentDTO.setId(id);
+        studentDTO.setEmail(savedStudent.getEmail());
         Student student = fromDTO(studentDTO);
         return new StudentDTO(studentRepository.save(student));
     }

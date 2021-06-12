@@ -4,6 +4,7 @@ import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
+import com.bruno.studentsmanagement.services.exceptions.InconsistencyStudentException;
 import com.bruno.studentsmanagement.services.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -148,7 +149,7 @@ public class StudentServiceTest {
     void whenUpdateByIdMethodIsCalledWithARegisteredIdThenDataStudentMustBeUpdated() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.of(givenStudent));
         when(studentRepository.save(givenStudent)).thenReturn(givenStudent);
-        StudentDTO updatedStudent = studentService.updateById(expectedStudent);
+        StudentDTO updatedStudent = studentService.updateById(givenStudent.getId(), expectedStudent);
         assertThat(updatedStudent.getId(), is(equalTo(expectedStudent.getId())));
         assertThat(updatedStudent.getName(), is(equalTo(expectedStudent.getName())));
         assertThat(updatedStudent.getBirthDate(), is(equalTo(expectedStudent.getBirthDate())));
@@ -159,6 +160,6 @@ public class StudentServiceTest {
     @Test
     void whenUpdateByIdMethodIsCalledWithAnUnregisteredIdThenThrowException() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
-        assertThrows(StudentNotFoundException.class, () -> studentService.updateById(expectedStudent));
+        assertThrows(StudentNotFoundException.class, () -> studentService.updateById(givenStudent.getId(), expectedStudent));
     }
 }
