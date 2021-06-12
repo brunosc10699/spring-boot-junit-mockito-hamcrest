@@ -57,6 +57,22 @@ public class StudentService {
         }
         studentDTO.setId(id);
         studentDTO.setEmail(savedStudent.getEmail());
+        if(studentDTO.getAttendance() == null){
+            studentDTO.setAttendance(savedStudent.getAttendance());
+        }
+        Student student = fromDTO(studentDTO);
+        return new StudentDTO(studentRepository.save(student));
+    }
+
+    public StudentDTO updateByEmail(StudentDTO studentDTO){
+        StudentDTO savedStudent = findByEmail(studentDTO.getEmail());
+        if(studentDTO.getId() != null && studentDTO.getId() != savedStudent.getId()){
+            throw new InconsistencyStudentException(studentDTO.getEmail(), studentDTO.getId());
+        }
+        studentDTO.setId(savedStudent.getId());
+        if(studentDTO.getAttendance() == null){
+            studentDTO.setAttendance(savedStudent.getAttendance());
+        }
         Student student = fromDTO(studentDTO);
         return new StudentDTO(studentRepository.save(student));
     }
