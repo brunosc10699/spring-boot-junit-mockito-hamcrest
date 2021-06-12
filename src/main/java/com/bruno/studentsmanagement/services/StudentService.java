@@ -19,7 +19,7 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     public StudentDTO save(StudentDTO studentDTO){
-        findByEmail(studentDTO.getEmail());
+        getStudentEmail(studentDTO.getEmail());
         Student student = fromDTO(studentDTO);
         student = studentRepository.save(student);
         return new StudentDTO(student);
@@ -35,11 +35,15 @@ public class StudentService {
     }
 
     public StudentDTO findByEmail(String email){
-        Optional<Student> student = studentRepository.findByEmail(email);
-        if(student.isEmpty()){
-            throw new StudentNotFoundException(email);
-        }
+        Student student = studentRepository.findByEmail(email).orElseThrow(() -> new StudentNotFoundException(email));
         return new StudentDTO(student);
+    }
+
+    private void getStudentEmail(String email){
+        Optional<Student> student = studentRepository.findByEmail(email);
+        if(student.isPresent()){
+            throw new EmailAlreadyRegisteredException(email);
+        }
     }
 
     private Student fromDTO(StudentDTO studentDTO){
