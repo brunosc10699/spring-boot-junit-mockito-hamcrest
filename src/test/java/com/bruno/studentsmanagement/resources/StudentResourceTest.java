@@ -4,20 +4,33 @@ import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.repositories.StudentRepository;
 import com.bruno.studentsmanagement.services.StudentService;
+import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.SimpleDateFormat;
 
+import static com.bruno.studentsmanagement.utils.JsonConvertionUtil.asJsonString;
+
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(MockitoExtension.class)
 public class StudentResourceTest {
+
+    private static final String URL = "/api/v1/students";
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -46,4 +59,26 @@ public class StudentResourceTest {
                 .build();
     }
 
+    @Test
+    void whenPOSTIsCalledThenCreatedStatusIsReturned() throws Exception {
+        when(studentService.save(expectedStudent)).thenReturn(expectedStudent);
+        mockMvc.perform(post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(givenStudent)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is(expectedStudent.getName())))
+                .andExpect(jsonPath("$.birthDate", is(expectedStudent.getBirthDate())))
+                .andExpect(jsonPath("$.email", is(expectedStudent.getEmail())))
+                .andExpect(jsonPath("$.phone", is(expectedStudent.getPhone())))
+                .andExpect(jsonPath("$.attendance", is(expectedStudent.getAttendance())));
+    }
+
+    @Test
+    void whenPOSTIsCalledWithARegisteredStudentEmailThenThrowsEmailAlreadyRegisteredException() throws Exception {
+        when(studentService.save(expectedStudent)).thenThrow(EmailAlreadyRegisteredException.class);
+        mockMvc.perform(post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(givenStudent)))
+                .andExpect(status().isBadRequest());
+    }
 }
