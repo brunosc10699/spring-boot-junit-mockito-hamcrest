@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -219,5 +219,21 @@ public class StudentServiceTest {
     void whenIncreaseAttendanceMethodIsCalledWithAnUnregisteredIdThenThrowException() {
         when(studentRepository.findById(givenStudent.getId())).thenReturn(Optional.empty());
         assertThrows(StudentNotFoundException.class, () -> studentService.increaseAttendance(givenStudent.getId()));
+    }
+
+    @Test
+    void whenFindByNameMethodIsCalledThenReturnAListOfStudents(){
+        when(studentRepository.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive"))
+                .thenReturn(Collections.nCopies(5, givenStudent));
+        List<StudentDTO> list = service.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive");
+        assertThat(list, is(not(empty())));
+    }
+
+    @Test
+    void whenFindByNameMethodIsCalledThenReturnAnEmptyList() {
+        when(studentRepository.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive"))
+                .thenReturn(Collections.emptyList());
+        List<StudentDTO> list = service.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive");
+        assertThat(list, is(empty()));
     }
 }
