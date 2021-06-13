@@ -225,7 +225,7 @@ public class StudentServiceTest {
     void whenFindByNameMethodIsCalledThenReturnAListOfStudents(){
         when(studentRepository.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive"))
                 .thenReturn(Collections.nCopies(5, givenStudent));
-        List<StudentDTO> list = service.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive");
+        List<StudentDTO> list = studentService.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive");
         assertThat(list, is(not(empty())));
     }
 
@@ -233,7 +233,7 @@ public class StudentServiceTest {
     void whenFindByNameMethodIsCalledThenReturnAnEmptyList() {
         when(studentRepository.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive"))
                 .thenReturn(Collections.emptyList());
-        List<StudentDTO> list = service.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive");
+        List<StudentDTO> list = studentService.findByNameContainingIgnoreCase("part_of_a_name_case_insensitive");
         assertThat(list, is(empty()));
     }
 }

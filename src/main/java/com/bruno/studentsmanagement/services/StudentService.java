@@ -85,6 +85,13 @@ public class StudentService {
         return new StudentDTO(studentRepository.save(student));
     }
 
+    public List<StudentDTO> findByNameContainingIgnoreCase(String name){
+        return studentRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(StudentDTO::new)
+                .collect(Collectors.toList());
+    }
+
     private Optional<Void> getStudentEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if(student.isPresent()) throw new EmailAlreadyRegisteredException(email);
