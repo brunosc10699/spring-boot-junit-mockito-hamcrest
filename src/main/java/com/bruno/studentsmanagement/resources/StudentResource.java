@@ -46,4 +46,10 @@ public class StudentResource {
         StudentDTO studentDTO = studentService.findByEmail(email);
         return ResponseEntity.ok(studentDTO);
     }
+
+    @DeleteMapping(value = "/id/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+        studentService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
