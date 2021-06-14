@@ -4,6 +4,7 @@ import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.services.StudentService;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
+import com.bruno.studentsmanagement.services.exceptions.StudentNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -94,4 +95,21 @@ public class StudentResourceTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void whenGETIsCalledToFindAStudentByARegisteredIdThenReturnOkStatus() throws Exception {
+        when(studentService.findById(givenStudent.getId())).thenReturn(expectedStudent);
+        mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(expectedStudent.getId())))
+                .andExpect(jsonPath("$.email", is(expectedStudent.getEmail())));
+    }
+
+    @Test
+    void whenGETIsCalledToFindAStudentByAnUnregisteredIdThenThrowStudentNotFoundException() throws Exception {
+        when(studentService.findById(givenStudent.getId())).thenThrow(StudentNotFoundException.class);
+        mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
