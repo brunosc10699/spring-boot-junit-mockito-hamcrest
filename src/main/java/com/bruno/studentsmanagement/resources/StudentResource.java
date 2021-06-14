@@ -58,4 +58,10 @@ public class StudentResource {
         studentService.deleteByEmail(email);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping(value = "/id/{id}")
+    public ResponseEntity<StudentDTO> updateById(@PathVariable Long id, @Valid @RequestBody StudentDTO studentDTO){
+        studentDTO = studentService.updateById(id, studentDTO);
+        return ResponseEntity.ok(studentDTO);
+    }
 }
