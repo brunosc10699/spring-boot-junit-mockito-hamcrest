@@ -61,8 +61,6 @@ public class StudentService {
 
     public StudentDTO updateByEmail(StudentDTO studentDTO){
         StudentDTO savedStudent = findByEmail(studentDTO.getEmail());
-        if(studentDTO.getId() != null && studentDTO.getId() != savedStudent.getId())
-            throw new InconsistencyStudentException(studentDTO.getEmail(), studentDTO.getId());
         studentDTO.setId(savedStudent.getId());
         if(!studentDTO.getEmail().equals(savedStudent.getEmail())) checkStudentEmail(studentDTO.getEmail());
         if(studentDTO.getAttendance() == null) studentDTO.setAttendance(savedStudent.getAttendance());
