@@ -154,4 +154,20 @@ public class StudentResourceTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void whenDELETEIsCalledWithARegisteredEmailThenReturnNoContentStatus() throws Exception {
+        doNothing().when(studentService).deleteByEmail(givenStudent.getEmail());
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/email/" + givenStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenDELETEIsCalledWithARegisteredEmailThenThrowStudentNotFoundException() throws Exception {
+        doThrow(StudentNotFoundException.class).when(studentService).deleteByEmail(givenStudent.getEmail());
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/email/" + givenStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
