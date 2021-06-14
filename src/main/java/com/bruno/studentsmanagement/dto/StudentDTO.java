@@ -26,9 +26,7 @@ public class StudentDTO implements Serializable {
     @Size(max = 50, message = "Student name may have 50 characters maximum!")
     private String name;
 
-    @NotBlank(message = "We need to know your birth date, please!")
-    @Size(max = 10, message = "Your birth date must have this format: xx/xx/xxxx")
-    @Past
+    @Past(message = "Your birth date must be earlier than today!")
     private Date birthDate;
 
     @Email(message = "Inform us your best email!")

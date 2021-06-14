@@ -2,7 +2,6 @@ package com.bruno.studentsmanagement.resources;
 
 import com.bruno.studentsmanagement.dto.StudentDTO;
 import com.bruno.studentsmanagement.entities.Student;
-import com.bruno.studentsmanagement.repositories.StudentRepository;
 import com.bruno.studentsmanagement.services.StudentService;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,10 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static com.bruno.studentsmanagement.utils.JsonConvertionUtil.asJsonString;
-
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,7 +48,10 @@ public class StudentResourceTest {
     private StudentService studentService;
 
     @InjectMocks
-    private StudentRepository studentResource;
+    private StudentResource studentResource;
+
+    public StudentResourceTest() throws ParseException {
+    }
 
     @BeforeEach
     void setUp() {
@@ -67,7 +69,7 @@ public class StudentResourceTest {
                 .content(asJsonString(givenStudent)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is(expectedStudent.getName())))
-                .andExpect(jsonPath("$.birthDate", is(expectedStudent.getBirthDate())))
+                .andExpect(jsonPath("$.birthDate", is(expectedStudent.getBirthDate().getTime())))
                 .andExpect(jsonPath("$.email", is(expectedStudent.getEmail())))
                 .andExpect(jsonPath("$.phone", is(expectedStudent.getPhone())))
                 .andExpect(jsonPath("$.attendance", is(expectedStudent.getAttendance())));
