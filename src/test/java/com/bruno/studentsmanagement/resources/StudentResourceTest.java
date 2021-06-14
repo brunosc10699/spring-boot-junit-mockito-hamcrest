@@ -26,7 +26,7 @@ import java.util.Collections;
 import static com.bruno.studentsmanagement.utils.JsonConvertionUtil.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.longThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -135,6 +135,22 @@ public class StudentResourceTest {
     void whenGETIsCalledToFindAStudentByEmailWithAnUnregisteredEmailThenThrowStudentNotFoundException() throws Exception {
         when(studentService.findByEmail(givenStudent.getEmail())).thenThrow(StudentNotFoundException.class);
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/email/" + givenStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void whenDELETEIsCalledWithARegisteredIdThenReturnNoContentStatus() throws Exception {
+        doNothing().when(studentService).deleteById(givenStudent.getId());
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/id/" + givenStudent.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenDELETEIsCalledWithARegisteredIdThenThrowStudentNotFoundException() throws Exception {
+        doThrow(StudentNotFoundException.class).when(studentService).deleteById(givenStudent.getId());
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/id/" + givenStudent.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
