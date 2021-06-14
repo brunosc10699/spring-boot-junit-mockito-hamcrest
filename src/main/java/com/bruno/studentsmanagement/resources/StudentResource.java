@@ -35,4 +35,10 @@ public class StudentResource {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<StudentDTO> findById(@PathVariable Long id){
+        StudentDTO studentDTO = studentService.findById(id);
+        return ResponseEntity.ok(studentDTO);
+    }
+
 }
