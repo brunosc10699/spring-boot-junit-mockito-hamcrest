@@ -258,7 +258,7 @@ public class StudentResourceTest {
     void whenGETIsCalledToFindByPartOfANameThenReturnOkStatus() throws Exception {
         when(studentService.findByNameContainingIgnoreCase(givenStudent.getName()))
                 .thenReturn(Collections.singletonList(expectedStudent));
-        mockMvc.perform(MockMvcRequestBuilders.get(URL + "?name=" + givenStudent.getName())
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/search?name=" + givenStudent.getName())
         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

@@ -85,4 +85,10 @@ public class StudentResource {
         studentService.increaseAttendance(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<StudentDTO>> findByNameContainingIgnoreCase(@RequestParam(value = "name", defaultValue = "") String text){
+        List<StudentDTO> list = studentService.findByNameContainingIgnoreCase(text);
+        return ResponseEntity.ok(list);
+    }
 }
