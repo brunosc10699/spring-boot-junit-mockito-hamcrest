@@ -20,6 +20,7 @@ public class StudentResource {
 
     @PostMapping
     public ResponseEntity<StudentDTO> save(@Valid @RequestBody StudentDTO studentDTO){
+        studentDTO.setAttendance(0);
         studentDTO = studentService.save(studentDTO);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
