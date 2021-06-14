@@ -9,6 +9,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/students")
@@ -26,6 +27,12 @@ public class StudentResource {
                 .buildAndExpand(studentDTO.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(studentDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StudentDTO>> findAll(){
+        List<StudentDTO> list = studentService.findAll();
+        return ResponseEntity.ok(list);
     }
 
 }
