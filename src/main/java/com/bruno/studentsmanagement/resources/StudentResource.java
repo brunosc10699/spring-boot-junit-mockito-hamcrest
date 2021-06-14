@@ -64,4 +64,10 @@ public class StudentResource {
         studentDTO = studentService.updateById(id, studentDTO);
         return ResponseEntity.ok(studentDTO);
     }
+
+    @PutMapping
+    public ResponseEntity<StudentDTO> updateByEmail(@Valid @RequestBody StudentDTO studentDTO){
+        studentDTO = studentService.updateByEmail(studentDTO);
+        return ResponseEntity.ok(studentDTO);
+    }
 }
