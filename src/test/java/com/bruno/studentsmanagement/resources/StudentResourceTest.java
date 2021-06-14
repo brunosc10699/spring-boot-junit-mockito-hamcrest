@@ -5,7 +5,6 @@ import com.bruno.studentsmanagement.entities.Student;
 import com.bruno.studentsmanagement.services.StudentService;
 import com.bruno.studentsmanagement.services.exceptions.EmailAlreadyRegisteredException;
 import com.bruno.studentsmanagement.services.exceptions.StudentNotFoundException;
-import com.sun.jdi.LongValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +24,6 @@ import java.util.Collections;
 
 import static com.bruno.studentsmanagement.utils.JsonConvertionUtil.asJsonString;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.longThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -241,6 +239,22 @@ public class StudentResourceTest {
         );
         mockMvc.perform(MockMvcRequestBuilders.patch(
                 URL + "/" + givenStudent.getId() + "/" + givenStudent.getEmail() + "/" + expectedStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void whenPATCHIsCalledToIncreaseStudentAttendanceWithARegisteredIdThenOkStatusIsReturned() throws Exception {
+        when(studentService.increaseAttendance(givenStudent.getId())).thenReturn(expectedStudent);
+        mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + givenStudent.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenPATCHIsCalledToIncreaseStudentAttendanceWithAnUnregisteredIdThenThrowStudentNotFoundException() throws Exception {
+        doThrow(StudentNotFoundException.class).when(studentService).increaseAttendance(givenStudent.getId());
+        mockMvc.perform(MockMvcRequestBuilders.patch(URL + "/" + givenStudent.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
