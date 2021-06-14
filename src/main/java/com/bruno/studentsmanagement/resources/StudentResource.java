@@ -35,10 +35,15 @@ public class StudentResource {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/id/{id}")
     public ResponseEntity<StudentDTO> findById(@PathVariable Long id){
         StudentDTO studentDTO = studentService.findById(id);
         return ResponseEntity.ok(studentDTO);
     }
 
+    @GetMapping(value = "/email/{email}")
+    public ResponseEntity<StudentDTO> findByEmail(@PathVariable String email){
+        StudentDTO studentDTO = studentService.findByEmail(email);
+        return ResponseEntity.ok(studentDTO);
+    }
 }

@@ -100,7 +100,7 @@ public class StudentResourceTest {
     @Test
     void whenGETIsCalledToFindAStudentByARegisteredIdThenReturnOkStatus() throws Exception {
         when(studentService.findById(givenStudent.getId())).thenReturn(expectedStudent);
-        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/" + givenStudent.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/id/" + givenStudent.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(expectedStudent.getName())))
@@ -113,7 +113,7 @@ public class StudentResourceTest {
     @Test
     void whenGETIsCalledToFindAStudentByAnUnregisteredIdThenThrowStudentNotFoundException() throws Exception {
         when(studentService.findById(givenStudent.getId())).thenThrow(StudentNotFoundException.class);
-        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/" + givenStudent.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/id/" + givenStudent.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -121,7 +121,7 @@ public class StudentResourceTest {
     @Test
     void whenGETIsCalledToFindAStudentByEmailWithARegisteredEmailThenReturnOkStatus() throws Exception {
         when(studentService.findByEmail(givenStudent.getEmail())).thenReturn(expectedStudent);
-        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/" + givenStudent.getEmail())
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/email/" + givenStudent.getEmail())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(expectedStudent.getName())))
@@ -134,7 +134,7 @@ public class StudentResourceTest {
     @Test
     void whenGETIsCalledToFindAStudentByEmailWithAnUnregisteredEmailThenThrowStudentNotFoundException() throws Exception {
         when(studentService.findByEmail(givenStudent.getEmail())).thenThrow(StudentNotFoundException.class);
-        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/" + givenStudent.getEmail())
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/email/" + givenStudent.getEmail())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
