@@ -13,11 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 import static com.bruno.studentsmanagement.utils.JsonConvertionUtil.asJsonString;
 import static org.hamcrest.core.Is.is;
@@ -83,4 +85,13 @@ public class StudentResourceTest {
                 .content(asJsonString(givenStudent)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void whenGETIsCalledToFindAllStudentsThenReturnOkStatus() throws Exception {
+        when(studentService.findAll()).thenReturn(Collections.singletonList(expectedStudent));
+        mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }
