@@ -11,12 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bruno.studentsmanagement.utils.DateConverterUtil.convertDate;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
@@ -26,11 +25,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
     private Student givenStudent = new Student(
             1L, "Pedro Álvares Cabral",
-            sdf.parse("01-01-1467"),
+            convertDate("01-01-1467"),
             "pedroac@gmail.com",
             "(11) 98741-3652",
             0
@@ -42,9 +39,6 @@ public class StudentServiceTest {
 
     @InjectMocks
     private StudentService studentService;
-
-    public StudentServiceTest() throws ParseException {
-    }
 
     @Test
     void whenANewStudentIsGivenThenItMustBeCreated() {

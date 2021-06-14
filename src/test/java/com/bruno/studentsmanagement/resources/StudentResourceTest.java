@@ -18,10 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 
+import static com.bruno.studentsmanagement.utils.DateConverterUtil.convertDate;
 import static com.bruno.studentsmanagement.utils.JsonConvertionUtil.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
@@ -34,15 +33,14 @@ public class StudentResourceTest {
 
     private static final String URL = "/api/v1/students";
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
     private Student givenStudent = new Student(
             1L, "Pedro Álvares Cabral",
-            sdf.parse("01-01-1467"),
+            convertDate("1467-01-01"),
             "pedroac@gmail.com",
             "(11) 98741-3652",
             0
     );
+
     private StudentDTO expectedStudent = new StudentDTO(givenStudent);
 
     private MockMvc mockMvc;
@@ -52,9 +50,6 @@ public class StudentResourceTest {
 
     @InjectMocks
     private StudentResource studentResource;
-
-    public StudentResourceTest() throws ParseException {
-    }
 
     @BeforeEach
     void setUp() {
