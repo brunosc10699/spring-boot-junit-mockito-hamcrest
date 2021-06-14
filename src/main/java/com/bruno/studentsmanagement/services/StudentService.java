@@ -20,7 +20,7 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     public StudentDTO save(StudentDTO studentDTO){
-        getStudentEmail(studentDTO.getEmail());
+        checkStudentEmail(studentDTO.getEmail());
         Student student = fromDTO(studentDTO);
         student = studentRepository.save(student);
         return new StudentDTO(student);
@@ -52,7 +52,7 @@ public class StudentService {
 
     public StudentDTO updateById(Long id, StudentDTO studentDTO){
         StudentDTO savedStudent = findById(id);
-        if(!studentDTO.getEmail().equals(savedStudent.getEmail())) getStudentEmail(studentDTO.getEmail());
+        if(!studentDTO.getEmail().equals(savedStudent.getEmail())) checkStudentEmail(studentDTO.getEmail());
         studentDTO.setId(id);
         if(studentDTO.getAttendance() == null) studentDTO.setAttendance(savedStudent.getAttendance());
         Student student = fromDTO(studentDTO);
@@ -64,7 +64,7 @@ public class StudentService {
         if(studentDTO.getId() != null && studentDTO.getId() != savedStudent.getId())
             throw new InconsistencyStudentException(studentDTO.getEmail(), studentDTO.getId());
         studentDTO.setId(savedStudent.getId());
-        if(!studentDTO.getEmail().equals(savedStudent.getEmail())) getStudentEmail(studentDTO.getEmail());
+        if(!studentDTO.getEmail().equals(savedStudent.getEmail())) checkStudentEmail(studentDTO.getEmail());
         if(studentDTO.getAttendance() == null) studentDTO.setAttendance(savedStudent.getAttendance());
         Student student = fromDTO(studentDTO);
         return new StudentDTO(studentRepository.save(student));
@@ -92,7 +92,7 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    private Optional<Void> getStudentEmail(String email){
+    private Optional<Void> checkStudentEmail(String email){
         Optional<Student> student = studentRepository.findByEmail(email);
         if(student.isPresent()) throw new EmailAlreadyRegisteredException(email);
         return null;
