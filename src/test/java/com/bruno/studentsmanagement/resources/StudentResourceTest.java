@@ -170,4 +170,27 @@ public class StudentResourceTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void whenPUTIsCalledToUpdateDataStudentByARegisteredIdThenReturnOkStatus() throws Exception {
+        when(studentService.updateById(givenStudent.getId(), expectedStudent)).thenReturn(expectedStudent);
+        mockMvc.perform(MockMvcRequestBuilders.put(URL + "/id/" + givenStudent.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJsonString(expectedStudent)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(expectedStudent.getName())))
+                .andExpect(jsonPath("$.birthDate", is(expectedStudent.getBirthDate().getTime())))
+                .andExpect(jsonPath("$.email", is(expectedStudent.getEmail())))
+                .andExpect(jsonPath("$.phone", is(expectedStudent.getPhone())))
+                .andExpect(jsonPath("$.attendance", is(expectedStudent.getAttendance())));
+    }
+
+    @Test
+    void whenPUTIsCalledToUpdateDataStudentByAnUnregisteredIdThenThrowStudentNotFoundException() throws Exception {
+        when(studentService.updateById(givenStudent.getId(), expectedStudent)).thenThrow(StudentNotFoundException.class);
+        mockMvc.perform(MockMvcRequestBuilders.put(URL + "/id/" + givenStudent.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(expectedStudent)))
+                .andExpect(status().isNotFound());
+    }
 }
