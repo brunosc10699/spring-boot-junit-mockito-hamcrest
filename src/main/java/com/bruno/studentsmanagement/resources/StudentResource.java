@@ -70,4 +70,12 @@ public class StudentResource {
         studentDTO = studentService.updateByEmail(studentDTO);
         return ResponseEntity.ok(studentDTO);
     }
+
+    @PatchMapping(value = "/{id}/{email}/{newEmail}")
+    public ResponseEntity<StudentDTO> updateEmail(
+            @PathVariable Long id, @PathVariable String email, @PathVariable String newEmail
+    ){
+        StudentDTO studentDTO = studentService.updateEmail(id, email, newEmail);
+        return ResponseEntity.ok(studentDTO);
+    }
 }

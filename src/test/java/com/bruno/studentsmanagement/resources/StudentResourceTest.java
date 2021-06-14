@@ -227,11 +227,9 @@ public class StudentResourceTest {
                 )
         ).thenReturn(expectedStudent);
         mockMvc.perform(MockMvcRequestBuilders.patch(
-                URL + "/" + givenStudent.getId() + "/" + givenStudent.getEmail())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedStudent.getEmail())))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is(expectedStudent.getEmail())));
+                URL + "/" + givenStudent.getId() + "/" + givenStudent.getEmail() + "/" + expectedStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -242,9 +240,8 @@ public class StudentResourceTest {
                 expectedStudent.getEmail()
         );
         mockMvc.perform(MockMvcRequestBuilders.patch(
-                URL + "/" + givenStudent.getId() + "/" + givenStudent.getEmail())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedStudent.getEmail())))
+                URL + "/" + givenStudent.getId() + "/" + givenStudent.getEmail() + "/" + expectedStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }
