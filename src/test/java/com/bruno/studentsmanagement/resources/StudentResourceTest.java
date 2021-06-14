@@ -193,4 +193,27 @@ public class StudentResourceTest {
                 .content(asJsonString(expectedStudent)))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void whenPUTIsCalledToUpdateDataStudentByARegisteredEmailThenReturnOkStatus() throws Exception {
+        when(studentService.updateByEmail(expectedStudent)).thenReturn(expectedStudent);
+        mockMvc.perform(MockMvcRequestBuilders.put(URL + "/email/" + givenStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(expectedStudent)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(expectedStudent.getName())))
+                .andExpect(jsonPath("$.birthDate", is(expectedStudent.getBirthDate().getTime())))
+                .andExpect(jsonPath("$.email", is(expectedStudent.getEmail())))
+                .andExpect(jsonPath("$.phone", is(expectedStudent.getPhone())))
+                .andExpect(jsonPath("$.attendance", is(expectedStudent.getAttendance())));
+    }
+
+    @Test
+    void whenPUTIsCalledToUpdateDataStudentByAnUnregisteredEmailThenThrowStudentNotFoundException() throws Exception {
+        when(studentService.updateByEmail(expectedStudent)).thenThrow(StudentNotFoundException.class);
+        mockMvc.perform(MockMvcRequestBuilders.put(URL + "/email/" + givenStudent.getEmail())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(expectedStudent)))
+                .andExpect(status().isNotFound());
+    }
 }
