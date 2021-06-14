@@ -46,8 +46,8 @@ public class StudentService {
     }
 
     public void deleteByEmail(String email){
-        findByEmail(email);
-        studentRepository.deleteByEmail(email);
+        StudentDTO studentDTO = findByEmail(email);
+        studentRepository.deleteByEmail(studentDTO.getEmail());
     }
 
     public StudentDTO updateById(Long id, StudentDTO studentDTO){
