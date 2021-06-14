@@ -52,4 +52,10 @@ public class StudentResource {
         studentService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping(value = "/email/{email}")
+    public ResponseEntity<Void> deleteByEmail(@PathVariable String email){
+        studentService.deleteByEmail(email);
+        return ResponseEntity.noContent().build();
+    }
 }
