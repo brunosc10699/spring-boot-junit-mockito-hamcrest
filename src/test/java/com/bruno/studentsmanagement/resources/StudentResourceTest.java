@@ -253,4 +253,13 @@ public class StudentResourceTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void whenGETIsCalledToFindByPartOfANameThenReturnOkStatus() throws Exception {
+        when(studentService.findByNameContainingIgnoreCase(givenStudent.getName()))
+                .thenReturn(Collections.singletonList(expectedStudent));
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "?name=" + givenStudent.getName())
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
