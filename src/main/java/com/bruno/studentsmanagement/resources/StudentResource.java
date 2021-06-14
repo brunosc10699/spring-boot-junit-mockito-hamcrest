@@ -78,4 +78,10 @@ public class StudentResource {
         StudentDTO studentDTO = studentService.updateEmail(id, email, newEmail);
         return ResponseEntity.ok(studentDTO);
     }
+
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<Void> increaseAttendance(@PathVariable Long id){
+        studentService.increaseAttendance(id);
+        return ResponseEntity.noContent().build();
+    }
 }
